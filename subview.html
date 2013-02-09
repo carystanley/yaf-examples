@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html xmanifest="manifest.mf">
+<head>
+    <meta charset="utf-8" />
+    <title>Example App</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+
+<div id="wrapper" class="yui3-app yui3-app-views"></div>
+
+<script id="combo-template" type="text/x-handlebars-template">
+<div class="title">Hello World</div>
+<div>
+  <div data-subview="a"></div>
+  <div data-subview="b"></div>
+</div>
+</script>
+
+
+<script src="http://yui.yahooapis.com/3.8.1/build/yui/yui-min.js"></script>
+<script>
+YUI().use('app', 'handlebars', function (Y) {
+
+Y.AView = Y.Base.create('aView', Y.View, [], {
+  events: {
+    '.eat': {click: 'eatSlice'}
+  },
+
+  template: '',
+
+  initializer: function () {
+
+  },
+
+  render: function () {
+    var container = this.get('container');
+
+    //container.setHTML(html);
+    container.append('A Render');
+
+    return this;
+  }
+}, {
+
+  ATTRS: {
+  }
+});
+
+Y.BView = Y.Base.create('bView', Y.View, [], {
+  events: {
+    '.eat': {click: 'eatSlice'}
+  },
+
+  template: '',
+
+  initializer: function () {
+
+  },
+
+  render: function () {
+    var container = this.get('container');
+
+    //container.setHTML(html);
+    container.append('B Render');
+
+    return this;
+  }
+}, {
+
+  ATTRS: {
+  }
+});
+
+Y.ComboView = Y.Base.create('comboView', Y.View, [], {
+  events: {
+    '.title': {click: 'render'}
+  },
+
+  template: Y.Handlebars.compile(Y.one('#combo-template').getHTML()),
+
+  initializer: function () {
+
+  },
+
+  render: function () {
+    var container = this.get('container'),
+        html = this.template(),
+        subviews = this.get('subviews'),
+        x;
+
+    container.setHTML(html);
+
+    for (x in subviews) {
+      subviews[x].set('container', container.one('div[data-subview="'+x+'"]'));
+      subviews[x].render();
+    }
+
+    return this;
+  }
+}, {
+
+  ATTRS: {
+  }
+});
+
+var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {a: new Y.AView(), b: new Y.BView()}});
+combo_view.render();
+
+});
+</script>
+</body>
+</html>
