@@ -27,9 +27,6 @@
 YUI().use('app', 'handlebars', function (Y) {
 
 Y.AView = Y.Base.create('aView', Y.View, [], {
-  events: {
-    '.eat': {click: 'eatSlice'}
-  },
 
   template: '',
 
@@ -41,7 +38,7 @@ Y.AView = Y.Base.create('aView', Y.View, [], {
     var container = this.get('container');
 
     //container.setHTML(html);
-    container.append('A Render');
+    container.append('<div style="height: 70px; background-color: #66e">A Render</div>');
 
     return this;
   }
@@ -52,9 +49,6 @@ Y.AView = Y.Base.create('aView', Y.View, [], {
 });
 
 Y.BView = Y.Base.create('bView', Y.View, [], {
-  events: {
-    '.eat': {click: 'eatSlice'}
-  },
 
   template: '',
 
@@ -66,7 +60,7 @@ Y.BView = Y.Base.create('bView', Y.View, [], {
     var container = this.get('container');
 
     //container.setHTML(html);
-    container.append('B Render');
+    container.append('<div style="height: 70px; background-color: #6e6">B Render</div>');
 
     return this;
   }
@@ -78,13 +72,24 @@ Y.BView = Y.Base.create('bView', Y.View, [], {
 
 Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   events: {
-    '.title': {click: 'render'}
+    '.title': {click: 'toggle'}
   },
 
   template: Y.Handlebars.compile(Y.one('#combo-template').getHTML()),
 
   initializer: function () {
 
+  },
+
+  toggle: function() {
+    var swap, 
+        subviews = this.get('subviews');
+
+    swap = subviews['a'];
+    subviews['a'] = subviews['b'];
+    subviews['b'] = swap;
+
+    this.render();
   },
 
   render: function () {
