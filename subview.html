@@ -14,10 +14,17 @@
 <div id="wrapper" class="yui3-app yui3-app-views"></div>
 
 <script id="combo-template" type="text/x-handlebars-template">
-<div class="title">Hello World</div>
+<button>Flip</button>
 <div>
   <div data-subview="a"></div>
   <div data-subview="b"></div>
+</div>
+</script>
+
+<script id="swap-template" type="text/x-handlebars-template">
+<button>Swap</button>
+<div>
+  <div data-subview="current"></div>
 </div>
 </script>
 
@@ -49,7 +56,7 @@ Y.PlainView = Y.Base.create('plainView', Y.View, [], {
 
 Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   events: {
-    '.title': {click: 'toggle'}
+    'button': {click: 'toggle'}
   },
 
   template: Y.Handlebars.compile(Y.one('#combo-template').getHTML()),
@@ -90,9 +97,64 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   }
 });
 
+Y.SwapView = Y.Base.create('swapView', Y.View, [], {
+  events: {
+    'button': {click: 'toggle'}
+  },
+
+  template: Y.Handlebars.compile(Y.one('#swap-template').getHTML()),
+
+  initializer: function () {
+    this.set('current', 'a');
+    this.setSubView('current', 'a');
+  },
+
+  toggle: function() {
+    var current = this.get('current');
+    if (current == 'a') {
+      this.set('current', 'b');
+      this.setSubView('current', 'b');
+    } else {
+      this.set('current', 'a');
+      this.setSubView('current', 'a');
+    }
+    this.render();
+  },
+
+  setSubView: function(region, view) {
+    var views = this.get('views'), 
+        subviews = this.get('subviews');
+
+    subviews[region] = views[view];
+  },
+
+  render: function () {
+    var container = this.get('container'),
+        html = this.template(),
+        subviews = this.get('subviews'),
+        x;
+
+    container.setHTML(html);
+
+    for (x in subviews) {
+      //subviews[x].render();
+      container.one('[data-subview="'+x+'"]').append(subviews[x].get('container'));
+    }
+
+    return this;
+  }
+}, {
+
+  ATTRS: {
+  }
+});
+
 var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {
-  a: new Y.PlainView({label: 'B', color: '#6e6'}).render(), 
-  b: new Y.PlainView({label: 'A', color: '#66e'}).render()
+  a: new Y.PlainView({label: 'A', color: '#6e6'}).render(), 
+  b: new Y.SwapView({views: {
+    a: new Y.PlainView({label: 'B', color: '#66e'}).render(), 
+    b: new Y.PlainView({label: 'C', color: '#e66'}).render()
+  }, subviews: {current: null}}).render()
 }});
 combo_view.render();
 
