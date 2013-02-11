@@ -96,8 +96,8 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
     container.setHTML(html);
 
     for (x in subviews) {
-      subviews[x].set('container', container.one('div[data-subview="'+x+'"]'));
-      subviews[x].render();
+      //subviews[x].render();
+      container.one('div[data-subview="'+x+'"]').append(subviews[x].get('container'));
     }
 
     return this;
@@ -108,7 +108,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   }
 });
 
-var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {a: new Y.AView(), b: new Y.BView()}});
+var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {a: new Y.AView().render(), b: new Y.BView().render()}});
 combo_view.render();
 
 });
