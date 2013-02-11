@@ -97,7 +97,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
 
     for (x in subviews) {
       //subviews[x].render();
-      container.one('div[data-subview="'+x+'"]').append(subviews[x].get('container'));
+      container.one('[data-subview="'+x+'"]').append(subviews[x].get('container'));
     }
 
     return this;
