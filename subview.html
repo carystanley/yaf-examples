@@ -26,8 +26,7 @@
 <script>
 YUI().use('app', 'handlebars', function (Y) {
 
-Y.AView = Y.Base.create('aView', Y.View, [], {
-
+Y.PlainView = Y.Base.create('plainView', Y.View, [], {
   template: '',
 
   initializer: function () {
@@ -38,29 +37,7 @@ Y.AView = Y.Base.create('aView', Y.View, [], {
     var container = this.get('container');
 
     //container.setHTML(html);
-    container.append('<div style="height: 70px; background-color: #66e">A Render</div>');
-
-    return this;
-  }
-}, {
-
-  ATTRS: {
-  }
-});
-
-Y.BView = Y.Base.create('bView', Y.View, [], {
-
-  template: '',
-
-  initializer: function () {
-
-  },
-
-  render: function () {
-    var container = this.get('container');
-
-    //container.setHTML(html);
-    container.append('<div style="height: 70px; background-color: #6e6">B Render</div>');
+    container.append('<div style="height: 70px; background-color: '+this.get('color')+'">'+this.get('label')+' Render</div>');
 
     return this;
   }
@@ -113,7 +90,10 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   }
 });
 
-var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {a: new Y.AView().render(), b: new Y.BView().render()}});
+var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {
+  a: new Y.PlainView({label: 'B', color: '#6e6'}).render(), 
+  b: new Y.PlainView({label: 'A', color: '#66e'}).render()
+}});
 combo_view.render();
 
 });
