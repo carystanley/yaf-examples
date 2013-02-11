@@ -62,7 +62,33 @@ Y.PlainView = Y.Base.create('plainView', Y.View, [], {
   }
 });
 
-Y.ComboView = Y.Base.create('comboView', Y.View, [], {
+Y.CompositeView = function() {};
+Y.CompositeView.prototype = {
+  initializer: function (config) {
+
+  },
+
+  renderChildViews: function() {
+    var subviews = this.get('subviews'),
+        container = this.get('container'),
+        x;
+
+    for (x in subviews) {
+      //subviews[x].render();
+      container.one('[data-subview="'+x+'"]').append(subviews[x].get('container'));
+    }
+  },
+
+  setSubView: function(region, view) {
+    var views = this.get('views'), 
+        subviews = this.get('subviews');
+
+    subviews[region] = views[view];
+  },
+
+};
+
+Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   events: {
     'button': {click: 'toggle'}
   },
@@ -85,18 +111,8 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   },
 
   render: function () {
-    var container = this.get('container'),
-        html = this.template(),
-        subviews = this.get('subviews'),
-        x;
-
-    container.setHTML(html);
-
-    for (x in subviews) {
-      //subviews[x].render();
-      container.one('[data-subview="'+x+'"]').append(subviews[x].get('container'));
-    }
-
+    this.get('container').setHTML(this.template());
+    this.renderChildViews();
     return this;
   }
 }, {
@@ -105,7 +121,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [], {
   }
 });
 
-Y.SwapView = Y.Base.create('swapView', Y.View, [], {
+Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   events: {
     'button': {click: 'toggle'}
   },
@@ -129,26 +145,9 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [], {
     this.render();
   },
 
-  setSubView: function(region, view) {
-    var views = this.get('views'), 
-        subviews = this.get('subviews');
-
-    subviews[region] = views[view];
-  },
-
   render: function () {
-    var container = this.get('container'),
-        html = this.template(),
-        subviews = this.get('subviews'),
-        x;
-
-    container.setHTML(html);
-
-    for (x in subviews) {
-      //subviews[x].render();
-      container.one('[data-subview="'+x+'"]').append(subviews[x].get('container'));
-    }
-
+    this.get('container').setHTML(this.template());
+    this.renderChildViews();
     return this;
   }
 }, {
