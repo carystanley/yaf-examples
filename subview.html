@@ -68,7 +68,7 @@ Y.CompositeView.prototype = {
 
   },
 
-  renderChildViews: function() {
+  attachChildViews: function() {
     var subviews = this.get('subviews'),
         container = this.get('container'),
         x;
@@ -79,7 +79,7 @@ Y.CompositeView.prototype = {
     }
   },
 
-  setSubView: function(region, view) {
+  assignSubView: function(region, view) {
     var views = this.get('views'), 
         subviews = this.get('subviews');
 
@@ -112,7 +112,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
 
   render: function () {
     this.get('container').setHTML(this.template());
-    this.renderChildViews();
+    this.attachChildViews();
     return this;
   }
 }, {
@@ -130,24 +130,24 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
 
   initializer: function () {
     this.set('current', 'a');
-    this.setSubView('current', 'a');
+    this.assignSubView('current', 'a');
   },
 
   toggle: function() {
     var current = this.get('current');
     if (current == 'a') {
       this.set('current', 'b');
-      this.setSubView('current', 'b');
+      this.assignSubView('current', 'b');
     } else {
       this.set('current', 'a');
-      this.setSubView('current', 'a');
+      this.assignSubView('current', 'a');
     }
     this.render();
   },
 
   render: function () {
     this.get('container').setHTML(this.template());
-    this.renderChildViews();
+    this.attachChildViews();
     return this;
   }
 }, {
