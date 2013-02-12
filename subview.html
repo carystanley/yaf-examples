@@ -64,12 +64,27 @@ Y.PlainView = Y.Base.create('plainView', Y.View, [], {
 
 Y.CompositeView = function() {};
 Y.CompositeView.prototype = {
+
   initializer: function (config) {
 
+    var self = this;
+    if (!this.views) this.views = {};
+    if (!this.subviews) this.subviews = {};
+
+    Y.Object.each(config.views, function(view, name) {
+      self.views[name] = view;
+    });
+    Y.Object.each(config.subviews, function(view, name) {
+      if (Y.Lang.isString(view)) {
+        self.subviews[name] = self.views[view];
+      } else {
+        self.subviews[name] = view;
+      }
+    });
   },
 
   attachChildViews: function() {
-    var subviews = this.get('subviews'),
+    var subviews = this.subviews,
         container = this.get('container'),
         x;
 
@@ -80,10 +95,7 @@ Y.CompositeView.prototype = {
   },
 
   assignSubView: function(region, view) {
-    var views = this.get('views'), 
-        subviews = this.get('subviews');
-
-    subviews[region] = views[view];
+    this.subviews[region] = this.views[view];
   },
 
 };
@@ -101,7 +113,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
 
   toggle: function() {
     var swap, 
-        subviews = this.get('subviews');
+        subviews = this.subviews;
 
     swap = subviews['a'];
     subviews['a'] = subviews['b'];
@@ -129,8 +141,6 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   template: Y.Handlebars.compile(Y.one('#swap-template').getHTML()),
 
   initializer: function () {
-    this.set('current', 'a');
-    this.assignSubView('current', 'a');
   },
 
   toggle: function() {
@@ -161,7 +171,7 @@ var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {
   b: new Y.SwapView({views: {
     a: new Y.PlainView({label: 'B', color: '#66e'}).render(), 
     b: new Y.PlainView({label: 'C', color: '#e66'}).render()
-  }, subviews: {current: null}}).render()
+  }, subviews: {current: 'a'}, current: 'a'}).render()
 }});
 combo_view.render();
 
