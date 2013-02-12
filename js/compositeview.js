@@ -28,7 +28,7 @@ Y.CompositeView.prototype = {
 
     for (x in regions) {
       //regions[x].render();
-      container.one('[data-subview="'+x+'"]').append(regions[x].get('container'));
+      container.one('[data-region="'+x+'"]').append(regions[x].get('container'));
     }
   },
 
