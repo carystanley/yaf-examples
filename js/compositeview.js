@@ -7,33 +7,33 @@ Y.CompositeView.prototype = {
 
     var self = this;
     if (!this.views) this.views = {};
-    if (!this.subviews) this.subviews = {};
+    if (!this.regions) this.regions = {};
 
     Y.Object.each(config.views, function(view, name) {
       self.views[name] = view;
     });
-    Y.Object.each(config.subviews, function(view, name) {
+    Y.Object.each(config.regions, function(view, name) {
       if (Y.Lang.isString(view)) {
-        self.subviews[name] = self.views[view];
+        self.regions[name] = self.views[view];
       } else {
-        self.subviews[name] = view;
+        self.regions[name] = view;
       }
     });
   },
 
   attachChildViews: function() {
-    var subviews = this.subviews,
+    var regions = this.regions,
         container = this.get('container'),
         x;
 
-    for (x in subviews) {
-      //subviews[x].render();
-      container.one('[data-subview="'+x+'"]').append(subviews[x].get('container'));
+    for (x in regions) {
+      //regions[x].render();
+      container.one('[data-subview="'+x+'"]').append(regions[x].get('container'));
     }
   },
 
   assignSubView: function(region, view) {
-    this.subviews[region] = this.views[view];
+    this.regions[region] = this.views[view];
   },
 
 };

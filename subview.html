@@ -77,11 +77,11 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
 
   toggle: function() {
     var swap, 
-        subviews = this.subviews;
+        regions = this.regions;
 
-    swap = subviews['bottom'];
-    subviews['bottom'] = subviews['top'];
-    subviews['top'] = swap;
+    swap = regions['bottom'];
+    regions['bottom'] = regions['top'];
+    regions['top'] = swap;
 
     this.render();
   },
@@ -138,11 +138,11 @@ var combo_view = new Y.ComboView({container: Y.one('#wrapper'),
         a: new Y.PlainView({label: 'B', color: '#66e'}).render(), 
         b: new Y.PlainView({label: 'C', color: '#e66'}).render()
       }, 
-      subviews: {current: 'a'}, 
+      regions: {current: 'a'}, 
       current: 'a'
     }).render()
   },
-  subviews: {
+  regions: {
     top: 'a',
     bottom: 'b'
   }
