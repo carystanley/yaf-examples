@@ -22,14 +22,12 @@ Y.CompositeView.prototype = {
   },
 
   attachChildViews: function() {
-    var regions = this.regions,
-        container = this.get('container'),
-        x;
+    var container = this.get('container');
 
-    for (x in regions) {
-      //regions[x].render();
-      container.one('[data-region="'+x+'"]').append(regions[x].get('container'));
-    }
+    Y.Object.each(this.regions, function(view, region) {
+      var regionContainer = container.one('[data-region="'+region+'"]');
+        regionContainer.append(view.get('container'));
+    });
   },
 
   assignSubView: function(region, view) {
