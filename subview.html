@@ -21,8 +21,8 @@
 <div class="view">
 <button>Flip</button>
 <div>
-  <div data-subview="a"></div>
-  <div data-subview="b"></div>
+  <div data-subview="top"></div>
+  <div data-subview="bottom"></div>
 </div>
 </div>
 </script>
@@ -79,9 +79,9 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
     var swap, 
         subviews = this.subviews;
 
-    swap = subviews['a'];
-    subviews['a'] = subviews['b'];
-    subviews['b'] = swap;
+    swap = subviews['bottom'];
+    subviews['bottom'] = subviews['top'];
+    subviews['top'] = swap;
 
     this.render();
   },
@@ -130,13 +130,23 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   }
 });
 
-var combo_view = new Y.ComboView({container: Y.one('#wrapper'), subviews: {
-  a: new Y.PlainView({label: 'A', color: '#6e6'}).render(), 
-  b: new Y.SwapView({views: {
-    a: new Y.PlainView({label: 'B', color: '#66e'}).render(), 
-    b: new Y.PlainView({label: 'C', color: '#e66'}).render()
-  }, subviews: {current: 'a'}, current: 'a'}).render()
-}});
+var combo_view = new Y.ComboView({container: Y.one('#wrapper'),
+  views: {
+    a: new Y.PlainView({label: 'A', color: '#6e6'}).render(), 
+    b: new Y.SwapView({
+      views: {
+        a: new Y.PlainView({label: 'B', color: '#66e'}).render(), 
+        b: new Y.PlainView({label: 'C', color: '#e66'}).render()
+      }, 
+      subviews: {current: 'a'}, 
+      current: 'a'
+    }).render()
+  },
+  subviews: {
+    top: 'a',
+    bottom: 'b'
+  }
+});
 combo_view.render();
 
 });
