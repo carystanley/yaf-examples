@@ -107,12 +107,10 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   },
 
   toggle: function() {
-    var current = this.get('current');
-    if (current == 'a') {
-      this.set('current', 'b');
+    var current = this.getRegionView('current');
+    if (current == this.getView('a')) {
       this.setRegionView('current', 'b');
     } else {
-      this.set('current', 'a');
       this.setRegionView('current', 'a');
     }
     this.render();
@@ -138,7 +136,6 @@ var combo_view = new Y.ComboView({container: Y.one('#wrapper'),
         b: new Y.PlainView({label: 'C', color: '#e66'}).render()
       }, 
       regions: {current: 'a'}, 
-      current: 'a'
     }).render()
   },
   regions: {
