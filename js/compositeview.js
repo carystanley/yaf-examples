@@ -21,7 +21,7 @@ Y.CompositeView.prototype = {
     });
   },
 
-  attachChildViews: function() {
+  attachRegionViews: function() {
     var container = this.get('container');
 
     Y.Object.each(this.regions, function(view, region) {
@@ -30,9 +30,17 @@ Y.CompositeView.prototype = {
     });
   },
 
-  assignSubView: function(region, view) {
-    this.regions[region] = this.views[view];
+  setRegionView: function(region, view) {
+    this.regions[region] = (Y.Lang.isString(view)) ? this.getView(view) : view;
   },
+
+  getRegionView: function(region) {
+    return this.regions[region];
+  },
+
+  getView: function(viewid) {
+    return this.views[viewid];
+  }
 
 };
 
