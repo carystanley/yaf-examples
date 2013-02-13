@@ -30,6 +30,18 @@ Y.CompositeView.prototype = {
     });
   },
 
+  detachRegionViews: function(options) {
+    Y.Object.each(this.regions, function(view, region) {
+      view.remove(options)
+    });
+  },
+
+  detachViews: function(options) {
+    Y.Object.each(this.views, function(view, viewid) {
+      view.remove(options)
+    });
+  },
+
   setRegionView: function(region, view) {
     this.regions[region] = (Y.Lang.isString(view)) ? this.getView(view) : view;
   },

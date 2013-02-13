@@ -86,6 +86,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   },
 
   render: function () {
+    this.detachRegionViews();
     this.get('container').setHTML(this.template());
     this.attachRegionViews();
     return this;
@@ -117,6 +118,7 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   },
 
   render: function () {
+    this.detachRegionViews();
     this.get('container').setHTML(this.template());
     this.attachRegionViews();
     return this;
