@@ -3,22 +3,28 @@ YUI.add('compositeview', function (Y, NAME) {
 Y.CompositeView = function() {};
 Y.CompositeView.prototype = {
 
+  views: {},
+
+  regions: {},
+
   initializer: function (config) {
 
-    var self = this;
-    if (!this.views) this.views = {};
-    if (!this.regions) this.regions = {};
+    var self = this,
+        regions = {};
 
-    Y.Object.each(config.views, function(view, name) {
-      self.views[name] = view;
-    });
-    Y.Object.each(config.regions, function(view, name) {
+    this.views = Y.merge(this.views, config.views);
+
+    function mergeRegionConfig(view, name) {
       if (Y.Lang.isString(view)) {
-        self.regions[name] = self.views[view];
+        regions[name] = self.views[view];
       } else {
-        self.regions[name] = view;
+        regions[name] = view;
       }
-    });
+    }
+    Y.Object.each(this.regions, mergeRegionConfig);
+    Y.Object.each(config.regions, mergeRegionConfig);
+
+    this.regions = regions;
   },
 
   attachRegionViews: function() {
