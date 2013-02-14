@@ -42,16 +42,20 @@ Y.CompositeView.prototype = {
     });
   },
 
-  setRegionView: function(region, view) {
-    this.regions[region] = (Y.Lang.isString(view)) ? this.getView(view) : view;
-  },
-
   getRegionView: function(region) {
     return this.regions[region];
   },
 
+  setRegionView: function(region, view) {
+    this.regions[region] = (Y.Lang.isString(view)) ? this.getView(view) : view;
+  },
+
   getView: function(viewid) {
     return this.views[viewid];
+  },
+
+  setView: function(viewid, view) {
+    this.views[viewid] = view;
   }
 
 };
