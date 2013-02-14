@@ -19,7 +19,7 @@
 
 <script id="combo-template" type="text/x-handlebars-template">
 <div class="view">
-<button>Flip</button>
+<button class="toggle">Flip</button>
 <div>
   <div data-region="top"></div>
   <div data-region="bottom"></div>
@@ -29,7 +29,7 @@
 
 <script id="swap-template" type="text/x-handlebars-template">
 <div class="view">
-<button>Swap</button>
+<button class="swap">Swap</button>
 <div>
   <div data-region="current"></div>
 </div>
@@ -44,7 +44,9 @@
 YUI().use('app', 'handlebars', 'compositeview', function (Y) {
 
 Y.PlainView = Y.Base.create('plainView', Y.View, [], {
-  template: '',
+  events: {
+    'button.plain': {click: 'handleAction'}
+  },
 
   initializer: function () {
 
@@ -54,10 +56,16 @@ Y.PlainView = Y.Base.create('plainView', Y.View, [], {
     var container = this.get('container');
 
     //container.setHTML(html);
-    container.append('<div style="height: 70px; background-color: '+this.get('color')+'">'+this.get('label')+' View</div>');
+    container.append('<div style="height: 70px; background-color: '+this.get('color')+'">'+this.get('label')+' View <button class="plain">Action</button></div>');
 
     return this;
+  },
+
+  handleAction: function() {
+    this.fire('customevent');
   }
+
+  
 }, {
 
   ATTRS: {
@@ -66,13 +74,15 @@ Y.PlainView = Y.Base.create('plainView', Y.View, [], {
 
 Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   events: {
-    'button': {click: 'toggle'}
+    'button.toggle': {click: 'toggle'}
   },
 
   template: Y.Handlebars.compile(Y.one('#combo-template').getHTML()),
 
   initializer: function () {
-
+    this.on('*:customevent', function(e) {
+      alert('You fired the Custom Event '+e.type);
+    });
   },
 
   toggle: function() {
@@ -99,12 +109,15 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
 
 Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   events: {
-    'button': {click: 'toggle'}
+    'button.swap': {click: 'toggle'}
   },
 
   template: Y.Handlebars.compile(Y.one('#swap-template').getHTML()),
 
   initializer: function () {
+    this.on('*:customevent', function(e) {
+      alert('You fired the Custom Event '+e.type);
+    });
   },
 
   toggle: function() {

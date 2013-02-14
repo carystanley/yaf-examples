@@ -3,28 +3,18 @@ YUI.add('compositeview', function (Y, NAME) {
 Y.CompositeView = function() {};
 Y.CompositeView.prototype = {
 
-  views: {},
-
-  regions: {},
-
   initializer: function (config) {
 
     var self = this,
-        regions = {};
+        regions;
 
     this.views = Y.merge(this.views, config.views);
+    regions = Y.merge(this.regions, config.regions);
 
-    function mergeRegionConfig(view, name) {
-      if (Y.Lang.isString(view)) {
-        regions[name] = self.views[view];
-      } else {
-        regions[name] = view;
-      }
-    }
-    Y.Object.each(this.regions, mergeRegionConfig);
-    Y.Object.each(config.regions, mergeRegionConfig);
-
-    this.regions = regions;
+    this.regions = {};
+    Y.Object.each(regions, function(view, name) {
+      self.setRegionView(name, view);
+    });
   },
 
   attachRegionViews: function() {
@@ -53,7 +43,11 @@ Y.CompositeView.prototype = {
   },
 
   setRegionView: function(region, view) {
+    if (this.regions[region]) {
+      this.regions[region].removeTarget(this);
+    }
     this.regions[region] = (Y.Lang.isString(view)) ? this.getView(view) : view;
+    this.regions[region].addTarget(this);
   },
 
   getView: function(viewid) {
@@ -69,3 +63,4 @@ Y.CompositeView.prototype = {
 }, '0.0.2', {
     requires : []
 });
+
