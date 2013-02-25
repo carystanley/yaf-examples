@@ -31,7 +31,7 @@
 <div class="view">
 <button class="swap">Swap</button>
 <div>
-  <div data-region="current"></div>
+  <div class="yui3-app-views" data-region="current"></div>
 </div>
 </div>
 </script>
@@ -41,7 +41,7 @@
 <script src="js/compositeview.js"></script>
 
 <script>
-YUI().use('app', 'handlebars', 'compositeview', function (Y) {
+YUI().use('app', 'handlebars', 'compositeview', 'app-transitions', function (Y) {
 
 Y.PlainView = Y.Base.create('plainView', Y.View, [], {
   events: {
@@ -107,10 +107,12 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   }
 });
 
-Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
+Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.App.Transitions], {
   events: {
     'button.swap': {click: 'toggle'}
   },
+
+  transitions: true,
 
   template: Y.Handlebars.compile(Y.one('#swap-template').getHTML()),
 
@@ -123,11 +125,10 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   toggle: function() {
     var current = this.getRegionView('current');
     if (current == this.getView('a')) {
-      this.setRegionView('current', 'b');
+      this.transitionRegionView('current', 'b');
     } else {
-      this.setRegionView('current', 'a');
+      this.transitionRegionView('current', 'a');
     }
-    this.render();
   },
 
   render: function () {
