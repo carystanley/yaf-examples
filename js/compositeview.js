@@ -8,8 +8,8 @@ Y.CompositeView.prototype = {
     var self = this,
         regions;
 
-    this.views = Y.merge(this.views, config.views);
-    regions = Y.merge(this.regions, config.regions);
+    this.views = Y.merge({}, this.views, (config ? config.views : {}));
+    regions = Y.merge({}, this.regions, (config ? config.regions : {}));
 
     this.regions = {};
     Y.Object.each(regions, function(view, name) {
@@ -43,6 +43,7 @@ Y.CompositeView.prototype = {
   },
 
   setRegionView: function(region, view) {
+    if (!this.regions) this.regions = {};
     if (this.regions[region]) {
       this.regions[region].removeTarget(this);
     }
@@ -55,6 +56,7 @@ Y.CompositeView.prototype = {
   },
 
   setView: function(viewid, view) {
+    if (!this.views) this.views = {};
     this.views[viewid] = view;
   }
 
