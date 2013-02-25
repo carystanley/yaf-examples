@@ -8,8 +8,10 @@ Y.CompositeView.prototype = {
     var self = this,
         regions;
 
-    this.views = Y.merge({}, this.views, (config ? config.views : {}));
-    regions = Y.merge({}, this.regions, (config ? config.regions : {}));
+    config || (config = {});
+
+    this.views = Y.merge({}, this.views, config.views);
+    regions = Y.merge({}, this.regions, config.regions);
 
     this.regions = {};
     Y.Object.each(regions, function(view, name) {
