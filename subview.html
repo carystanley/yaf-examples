@@ -39,9 +39,10 @@
 
 <script src="http://yui.yahooapis.com/3.8.1/build/yui/yui-min.js"></script>
 <script src="js/compositeview.js"></script>
+<script src="js/compositetransitions.js"></script>
 
 <script>
-YUI().use('app', 'handlebars', 'compositeview', 'app-transitions', function (Y) {
+YUI().use('app', 'handlebars', 'compositeview', 'compositetransitions', function (Y) {
 
 Y.PlainView = Y.Base.create('plainView', Y.View, [], {
   events: {
@@ -107,7 +108,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   }
 });
 
-Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.App.Transitions], {
+Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.CompositeTransitions], {
   events: {
     'button.swap': {click: 'toggle'}
   },
