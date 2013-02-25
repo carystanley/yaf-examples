@@ -75,6 +75,9 @@ Y.CompositeView.prototype = {
         fx;
  
     oldView = this.getRegionView(region);
+
+    if (oldView == newView) return callback && callback.call(self, newView);
+
     this.setRegionView(region, view);
 
     regionContainer[prepend ? 'prepend' : 'append'](newView.get('container'));
