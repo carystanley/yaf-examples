@@ -10,7 +10,7 @@ Y.CompositeTransitions.prototype = {
       return fx[transition];
     }
 
-    return fx[transitions.navigate];
+    return 'slideLeft';
   },
 
   transitionRegionView: function(region, view, options) {
