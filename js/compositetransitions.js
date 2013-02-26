@@ -3,8 +3,21 @@ YUI.add('compositetransitions', function (Y, NAME) {
 Y.CompositeTransitions = function() {};
 Y.CompositeTransitions.prototype = {
 
-  transitionRegionView: function(region, view, callback) {
+  _getFx: function (newView, oldView, transition) {
+    var fx = Y.App.Transitions.FX
+
+    if (transition) {
+      return fx[transition];
+    }
+
+    return fx[transitions.navigate];
+  },
+
+  transitionRegionView: function(region, view, options) {
+    options || (options = {});
+
     var self = this,
+        callback = options.callback,
         container = this.get('container'),
         prepend = false,
         transitioning = Y.App.CLASS_NAMES.transitioning,
@@ -30,11 +43,8 @@ Y.CompositeTransitions.prototype = {
         crossView: !!oldView && !!newView,
         prepended: prepend
     };
-    fx = {
-      viewIn: 'app:slideLeft', 
-      viewOut: 'app:slideLeft' 
-    };
 
+    fx = this._getFx(newView, oldView, options.transition);
     if (newView && fx.viewIn) {
       newView.get('container')
         .transition(fx.viewIn, fxConfig, transitions.add());
