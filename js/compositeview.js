@@ -24,6 +24,7 @@ Y.CompositeView.prototype = {
 
     Y.Object.each(this.regions, function(view, region) {
       var regionContainer = container.one('[data-region="'+region+'"]');
+        regionContainer.addClass('yui3-app-views');
         regionContainer.append(view.get('container'));
     });
   },
