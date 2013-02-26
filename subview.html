@@ -128,7 +128,7 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.CompositeTran
     if (current == this.getView('a')) {
       this.transitionRegionView('current', 'b', {transition: 'slideLeft'});
     } else {
-      this.transitionRegionView('current', 'a', {transition: 'slideRight'});
+      this.transitionRegionView('current', 'a', {transition: 'slideLeft'});
     }
   },
 
