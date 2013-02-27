@@ -3,6 +3,12 @@ YUI.add('compositetransitions', function (Y, NAME) {
 Y.CompositeTransitions = function() {};
 Y.CompositeTransitions.prototype = {
 
+/*
+ * To Do:
+ *
+ * - Queuing of Transitions
+ */
+
   _getFx: function (newView, oldView, transition) {
     var fx = Y.App.Transitions.FX
 
