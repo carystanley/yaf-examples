@@ -10,7 +10,7 @@ Y.CompositeTransitions.prototype = {
  */
 
   _getFx: function (newView, oldView, transition) {
-    var fx = Y.App.Transitions.FX
+    var fx = Y.App.Transitions.FX;
 
     if (transition) {
       return fx[transition];
@@ -36,7 +36,7 @@ Y.CompositeTransitions.prototype = {
  
     oldView = this.getRegionView(region);
 
-    if (oldView == newView) return callback && callback.call(self, newView);
+    if (oldView === newView) return callback && callback.call(self, newView);
 
     this.setRegionView(region, view);
 
