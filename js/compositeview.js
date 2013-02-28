@@ -45,7 +45,7 @@ Y.CompositeView.prototype = {
 
     this.regions = {};
     Y.Object.each(regions, function(view, name) {
-      self.getRegion(name).setView(view);
+      self.createRegion(name).setView(view);
     });
   },
 
@@ -61,11 +61,12 @@ Y.CompositeView.prototype = {
     });
   },
 
-  getRegion: function(region) {
-    if (!this.regions[region]) {
-      this.regions[region] = new ViewRegion(this, '[data-region="'+region+'"]', null);
-    }
-    return this.regions[region];
+  createRegion: function(name, selector) {
+    return (this.regions[name] = new ViewRegion(this, (selector ? selector : '[data-region="'+name+'"]'), null));
+  },
+
+  getRegion: function(name) {
+    return this.regions[name];
   },
 
   getView: function(viewid) {
