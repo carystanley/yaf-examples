@@ -34,11 +34,11 @@ Y.CompositeTransitions.prototype = {
         fxConfig,
         fx;
  
-    oldView = this.getRegionView(region);
+    oldView = this.getRegion(region).getView();
 
     if (oldView === newView) return callback && callback.call(self, newView);
 
-    this.setRegionView(region, view);
+    this.getRegion(region).setView(view);
 
     regionContainer[prepend ? 'prepend' : 'append'](newView.get('container'));
     newView.addTarget(this);

@@ -89,9 +89,9 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   toggle: function() {
     var swap;
 
-    swap = this.getRegionView('bottom');
-    this.setRegionView('bottom', this.getRegionView('top'));
-    this.setRegionView('top', swap);
+    swap = this.getRegion('bottom').getView();
+    this.getRegion('bottom').setView(this.getRegion('top').getView());
+    this.getRegion('top').setView(swap);
 
     this.render();
   },
@@ -124,12 +124,15 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.CompositeTran
   },
 
   toggle: function() {
-    var current = this.getRegionView('current');
-    if (current == this.getView('a')) {
+    var current = this.getRegion('current').getView();
+    if (current === this.getView('a')) {
+      //this.getRegion('current').setView('b', {transition: 'slideLeft'});
       this.transitionRegionView('current', 'b', {transition: 'slideLeft'});
     } else {
+      //this.getRegion('current').setView('a', {transition: 'slideLeft'});
       this.transitionRegionView('current', 'a', {transition: 'slideLeft'});
     }
+    //this.render();
   },
 
   render: function () {
