@@ -1,25 +1,31 @@
 YUI.add('compositeview', function (Y, NAME) {
 
-var ViewRegion = function(parent, view) {
+var ViewRegion = function(parent, selector, view) {
   this.parent = parent;
+  this.selector = selector;
   this.view = view;
 };
 ViewRegion.prototype = {
   setView: function(view) {
-    this._detachView();
     this.view = (Y.Lang.isString(view)) ? this.parent.getView(view) : view;
-    this._attachView();
   },
   getView: function() {
     return this.view;
   },
-  _detachView: function() {
+  detachView: function(options) {
     if (this.view) {
+      this.view.remove(options)
       this.view.removeTarget(this.parent);
     }
   },
-  _attachView: function() {
-    this.view.addTarget(this.parent);
+  attachView: function() {
+    var container;
+    if (this.view) {
+      container = this.parent.get('container').one(this.selector);
+      container.addClass('yui3-app-views');
+      container.append(this.view.get('container'));
+      this.view.addTarget(this.parent);
+    }
   },
 };
 Y.ViewRegion = ViewRegion;
@@ -44,37 +50,20 @@ Y.CompositeView.prototype = {
   },
 
   attachRegionViews: function() {
-    var container = this.get('container');
-
-    Y.Object.each(this.regions, function(region, name) {
-      var regionContainer = container.one('[data-region="'+name+'"]'),
-          regionView = region.getView();
-
-      if (regionView) {
-        regionContainer.addClass('yui3-app-views');
-        regionContainer.append(regionView.get('container'));
-      }
+    Y.Object.each(this.regions, function(region) {
+      region.attachView();
     });
   },
 
   detachRegionViews: function(options) {
-    Y.Object.each(this.regions, function(region, name) {
-      var regionView = region.getView();
-      if (regionView) {
-        regionView.remove(options)
-      }
-    });
-  },
-
-  detachViews: function(options) {
-    Y.Object.each(this.views, function(view, viewid) {
-      view.remove(options)
+    Y.Object.each(this.regions, function(region) {
+      region.detachView(options);
     });
   },
 
   getRegion: function(region) {
     if (!this.regions[region]) {
-      this.regions[region] = new ViewRegion(this, null);
+      this.regions[region] = new ViewRegion(this, '[data-region="'+region+'"]', null);
     }
     return this.regions[region];
   },
