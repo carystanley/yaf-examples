@@ -7,12 +7,12 @@ var ViewRegion = function(parent, selector, view) {
 };
 ViewRegion.prototype = {
   setView: function(view) {
-    this.view = this._resolveView(view);
+    this.view = view;
   },
   showView: function(view, options) {
     options || (options = {});
     this.detachView();
-    this.view = this._resolveView(view);
+    this.view = view;
     this.attachView();
   },
   getView: function() {
@@ -45,7 +45,7 @@ ViewRegion.prototype = {
         prepend = options.prepend || false,
         transitioning = Y.App.CLASS_NAMES.transitioning,
         oldView,
-        newView = this._resolveView(view),
+        newView = view,
         regionContainer = this.getContainer(),
         transitions,
         fxConfig,
@@ -86,9 +86,6 @@ ViewRegion.prototype = {
     }
 
     transitions.done(complete);
-  },
-  _resolveView: function(view) {
-    return (Y.Lang.isString(view)) ? this.parent.getView(view) : view;
   }
 };
 Y.ViewRegion = ViewRegion;
@@ -108,7 +105,7 @@ Y.CompositeView.prototype = {
 
     this.regions = {};
     Y.Object.each(regions, function(view, name) {
-      self.createRegion(name).setView(view);
+      self.createRegion(name).setView((Y.Lang.isString(view)) ? self.getView(view) : view);
     });
   },
 

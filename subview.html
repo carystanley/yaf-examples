@@ -126,9 +126,9 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   toggle: function() {
     var current = this.getRegion('current').getView();
     if (current === this.getView('a')) {
-      this.getRegion('current').transitionView('b', {transition: 'slideLeft'});
+      this.getRegion('current').transitionView(this.getView('b'), {transition: 'slideLeft'});
     } else {
-      this.getRegion('current').transitionView('a', {transition: 'slideLeft'});
+      this.getRegion('current').transitionView(this.getView('a'), {transition: 'slideLeft'});
     }
   },
 
