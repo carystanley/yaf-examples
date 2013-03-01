@@ -42,7 +42,7 @@
 <script src="js/compositetransitions.js"></script>
 
 <script>
-YUI().use('app', 'handlebars', 'compositeview', 'compositetransitions', function (Y) {
+YUI().use('app', 'handlebars', 'compositeview', function (Y) {
 
 Y.PlainView = Y.Base.create('plainView', Y.View, [], {
   events: {
@@ -108,7 +108,7 @@ Y.ComboView = Y.Base.create('comboView', Y.View, [Y.CompositeView], {
   }
 });
 
-Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.CompositeTransitions], {
+Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView], {
   events: {
     'button.swap': {click: 'toggle'}
   },
@@ -126,13 +126,10 @@ Y.SwapView = Y.Base.create('swapView', Y.View, [Y.CompositeView, Y.CompositeTran
   toggle: function() {
     var current = this.getRegion('current').getView();
     if (current === this.getView('a')) {
-      //this.getRegion('current').setView('b', {transition: 'slideLeft'});
-      this.transitionRegionView('current', 'b', {transition: 'slideLeft'});
+      this.getRegion('current').transitionView('b', {transition: 'slideLeft'});
     } else {
-      //this.getRegion('current').setView('a', {transition: 'slideLeft'});
-      this.transitionRegionView('current', 'a', {transition: 'slideLeft'});
+      this.getRegion('current').transitionView('a', {transition: 'slideLeft'});
     }
-    //this.render();
   },
 
   render: function () {

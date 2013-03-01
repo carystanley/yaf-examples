@@ -7,7 +7,12 @@ var ViewRegion = function(parent, selector, view) {
 };
 ViewRegion.prototype = {
   setView: function(view) {
-    this.view = (Y.Lang.isString(view)) ? this.parent.getView(view) : view;
+    this.view = this._resolveView(view);
+  },
+  showView: function(view) {
+    this.detachView();
+    this.view = this._resolveView(view);
+    this.attachView();
   },
   getView: function() {
     return this.view;
@@ -18,15 +23,72 @@ ViewRegion.prototype = {
       this.view.removeTarget(this.parent);
     }
   },
+  getContainer: function() {
+    return this.parent.get('container').one(this.selector);
+  },
   attachView: function() {
     var container;
     if (this.view) {
-      container = this.parent.get('container').one(this.selector);
+      container = this.getContainer();
       container.addClass('yui3-app-views');
       container.append(this.view.get('container'));
       this.view.addTarget(this.parent);
     }
   },
+  transitionView: function(view, options) {
+    options || (options = {});
+
+    var self = this,
+        callback = options.callback,
+        container = this.parent.get('container'),
+        prepend = options.prepend || false,
+        transitioning = Y.App.CLASS_NAMES.transitioning,
+        oldView,
+        newView = this._resolveView(view),
+        regionContainer = this.getContainer(),
+        transitions,
+        fxConfig,
+        fx;
+ 
+    oldView = this.getView();
+
+    if (oldView === newView) return callback && callback.call(self, newView);
+
+    this.setView(view);
+
+    regionContainer[prepend ? 'prepend' : 'append'](newView.get('container'));
+    newView.addTarget(this.parent);
+
+    container.addClass(transitioning);
+    transitions = new Y.Parallel({context: this});
+    fxConfig    = {
+        crossView: !!oldView && !!newView,
+        prepended: prepend
+    };
+
+    fx = Y.App.Transitions.FX[options.transition || 'slideLeft'];
+    if (newView && fx.viewIn) {
+      newView.get('container')
+        .transition(fx.viewIn, fxConfig, transitions.add());
+    }
+
+    if (oldView && fx.viewOut) {
+      oldView.get('container')
+        .transition(fx.viewOut, fxConfig, transitions.add());
+    }
+
+    function complete() {
+      oldView.remove();
+      oldView.removeTarget(self.parent);
+      container.removeClass(transitioning);
+      callback && callback.call(self, newView);
+    }
+
+    transitions.done(complete);
+  },
+  _resolveView: function(view) {
+    return (Y.Lang.isString(view)) ? this.parent.getView(view) : view;
+  }
 };
 Y.ViewRegion = ViewRegion;
 
