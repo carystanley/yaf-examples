@@ -9,7 +9,8 @@ ViewRegion.prototype = {
   setView: function(view) {
     this.view = this._resolveView(view);
   },
-  showView: function(view) {
+  showView: function(view, options) {
+    options || (options = {});
     this.detachView();
     this.view = this._resolveView(view);
     this.attachView();
