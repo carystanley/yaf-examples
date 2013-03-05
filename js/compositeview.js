@@ -103,30 +103,32 @@ Y.CompositeView.prototype = {
     this.views = Y.merge({}, this.views, config.views);
     regions = Y.merge({}, this.regions, config.regions);
 
-    this.regions = {};
     Y.Object.each(regions, function(view, name) {
       self.createRegion(name).setView((Y.Lang.isString(view)) ? self.getView(view) : view);
     });
   },
 
   attachRegionViews: function() {
-    Y.Object.each(this.regions, function(region) {
+    Y.Object.each(this._regions, function(region) {
       region.attachView();
     });
   },
 
   detachRegionViews: function(options) {
-    Y.Object.each(this.regions, function(region) {
+    Y.Object.each(this._regions, function(region) {
       region.detachView(options);
     });
   },
 
   createRegion: function(name, selector) {
-    return (this.regions[name] = new ViewRegion(this, (selector ? selector : '[data-region="'+name+'"]'), null));
+    if (!this._regions) { 
+      this._regions = {}
+    };
+    return (this._regions[name] = new ViewRegion(this, (selector ? selector : '[data-region="'+name+'"]'), null));
   },
 
   getRegion: function(name) {
-    return this.regions[name];
+    return this._regions[name];
   },
 
   getView: function(viewid) {
