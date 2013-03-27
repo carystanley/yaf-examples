@@ -54,6 +54,10 @@ ViewRegion.prototype = {
     oldView = this.getView();
 
     if (oldView === newView) return callback && callback.call(self, newView);
+    if (!Y.App.TransitionsNative) {
+      self.showView(newView, options);
+      return callback && callback.call(self, newView);
+    }
 
     this.setView(view);
 
@@ -143,6 +147,6 @@ Y.CompositeView.prototype = {
 };
 
 }, '0.0.2', {
-    requires : []
+    requires : ['parallel']
 });
 
