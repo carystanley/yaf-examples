@@ -12,22 +12,29 @@
 
 <script id="paged-template" type="text/x-handlebars-template">
 {{#with navigation}}
+<div class="filter">
+Filter:
+  <button data-value="">None</button>
+  <button data-value="animal">Animal</button>
+  <button data-value="food">Food</button>
+  <button data-value="other">Other</button>
+<div>
+<div class="sort">
+Sort:
+  <button data-value="">None</button>
+  <button data-value="name">Name</button>
+  <button data-value="score">Score</button>
+  <button data-value="speed">Speed</button>
+  <button data-value="type">Type</button>
+</div>
+<div>
 <button class="previous">Previous</button>
 <button class="next">Next</button>
-{{currentPage}} / {{totalPages}}
-Filter: <select class="filter">
-  <option value="">None</option>
-  <option value="animal">Animal</option>
-  <option value="food">Food</option>
-  <option value="other">Other</option>
-</select>
-Sort: <select class="sort">
-  <option value="">None</option>
-  <option value="name">Name</option>
-  <option value="score">Score</option>
-  <option value="speed">Speed</option>
-  <option value="type">Type</option>
-</select>
+</div>
+
+<div>Fitler: {{currentFilter}} </div>
+<div>Sort: {{currentSort}}</div>
+<div>Page: {{currentPage}} / {{totalPages}}</div>
 {{/with}}
 <table border="1">
 <tr>
@@ -114,8 +121,8 @@ Y.PagedView = Y.Base.create('pagedView', Y.View, [], {
   events: {
     'button.next': {click: 'next'},
     'button.previous': {click: 'previous'},
-    'select.sort': {change: 'sortBy'},
-    'select.filter': {change: 'filterBy'}
+    '.sort button': {click: 'sortBy'},
+    '.filter button': {click: 'filterBy'}
   },
 
   template: Y.Handlebars.compile(Y.one('#paged-template').getHTML()),
@@ -146,11 +153,11 @@ Y.PagedView = Y.Base.create('pagedView', Y.View, [], {
   },
 
   sortBy: function(e) {
-    this.get('pagedList').sortBy(e.target.get('value'));
+    this.get('pagedList').sortBy(e.target.getAttribute('data-value'));
   },
 
   filterBy: function(e) {
-    this.get('pagedList').filterBy(e.target.get('value'));
+    this.get('pagedList').filterBy(e.target.getAttribute('data-value'));
   }
 }, {
 
