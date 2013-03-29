@@ -47,9 +47,15 @@ YUI.add('paginated-model-sync', function (Y, NAME) {
         }
 
         /* get the page */
+        var totalItems = items.length,
+          totalPages = Math.ceil(totalItems / this.pagesize)
         items = items.slice(start, start + this.pagesize);
 
-        return callback(null, items);
+        return callback(null, {
+          items: items,
+          totalItems: totalItems,
+          totalPages: totalPages
+        });
       },
 
       getFilter: function(filter) {

@@ -5,7 +5,8 @@ Y.PaginatedModelList = Y.Base.create('paginatedModelList', Y.ModelList, [], {
   initializer: function (config) {
     config = config || {};
     this._currentPage = config.currentPage || 1;
-    this._totalPages = 10;
+    this._totalPages = 0;
+    this._totalItems = 0;
     this._currentFilter = config.filter || null;
     this._currentSort = config.sort || null;
   },
@@ -54,6 +55,12 @@ Y.PaginatedModelList = Y.Base.create('paginatedModelList', Y.ModelList, [], {
       currentSort: this._currentSort,
       currentFilter: this._currentFilter
     };
+  },
+
+  parse: function(response) {
+    this._totalPages = response.totalPages;
+    this._totalItems = response.totalItems;
+    return response.items;
   },
 
   load: function(options, callback) {
