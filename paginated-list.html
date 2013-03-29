@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html xmanifest="manifest.mf">
+<head>
+    <meta charset="utf-8" />
+    <title>Example App</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+</head>
+<body>
+
+<div id="wrapper" class="yui3-app yui3-app-views"></div>
+
+<script id="paged-template" type="text/x-handlebars-template">
+{{#with navigation}}
+<button class="previous">Previous</button>
+<button class="next">Next</button>
+{{currentPage}} / {{totalPages}}
+Filter: <select class="filter">
+  <option value="">None</option>
+  <option value="animal">Animal</option>
+  <option value="food">Food</option>
+  <option value="other">Other</option>
+</select>
+Sort: <select class="sort">
+  <option value="">None</option>
+  <option value="name">Name</option>
+  <option value="score">Score</option>
+  <option value="speed">Speed</option>
+  <option value="type">Type</option>
+</select>
+{{/with}}
+<table border="1">
+<tr>
+  <td>Name</td>
+  <td>Score</td>
+  <td>Speed</td>
+  <td>Type</td>
+</tr>
+{{#each items}}
+<tr>
+  <td>{{name}}</td>
+  <td>{{score}}</td>
+  <td>{{speed}}</td>
+  <td>{{type}}</td>
+</tr>
+{{/each}}
+</table>
+</script>
+
+
+<script src="http://yui.yahooapis.com/3.9.1/build/yui/yui.js"></script>
+<script src="js/paginated-model-list.js"></script>
+<script src="js/paginated-model-sync.js"></script>
+
+<script>
+YUI({
+  debug: true,
+  combine: false
+}).use('app', 'model', 'model-list', 'handlebars', 'paginated-model-sync', 'paginated-model-list', function (Y) {
+
+  Y.PlayerModel = Y.Base.create('playerModel', Y.Model, [], {
+
+  }, {
+    ATTRS: {
+      name: {value: ''},
+      name: {value: 'other'},
+      score: {value: 0},
+      speed: {value: 0}
+    } 
+  });
+
+  var all_players = new Y.ModelList({
+    model: Y.PlayerModel,
+    items: [
+      {name: 'Ape', type: 'animal', score: 20, speed: 22},
+      {name: 'Banana', type: 'food', score: 70, speed: 62},
+      {name: 'Cold', type: 'other', score: 40, speed: 83},
+      {name: 'Dog', type: 'animal', score: 90, speed: 28},
+      {name: 'Elephant', type: 'animal', score: 10, speed: 85},
+      {name: 'Finger', type: 'other', score: 20, speed: 37},
+      {name: 'Grape', type: 'food', score: 30, speed: 48},
+      {name: 'Hat', type: 'other', score: 80, speed: 48},
+      {name: 'Itch', type: 'other', score: 50, speed: 58},
+      {name: 'Jam', type: 'food', score: 40, speed: 3},
+      {name: 'Kite', type: 'other', score: 90, speed: 59},
+      {name: 'Lame', type: 'other', score: 40, speed: 85},
+      {name: 'Mocca', type: 'food', score: 90, speed: 56},
+      {name: 'Nickle', type: 'other', score: 40, speed: 28},
+      {name: 'Oreo', type: 'food', score: 30, speed: 85},
+      {name: 'Pickle', type: 'food', score: 90, speed: 48}
+    ]
+  });
+  
+  Y.PaginatedPlayerList = Y.Base.create('paginatedPlayerList', Y.PaginatedModelList, [Y.PaginatedModelSync], {
+    getFilter: function(type) {
+      if (type) {
+        return function(a) { return (a.get('type') == type); };
+      }
+      return null;
+    },
+
+    getSort: function(field) {
+      if (field) {
+        return function(a,b) { return (a.get(field) > b.get(field)) ? 1 : -1; };
+      }
+      return null;
+    }
+  });
+
+  var list = new Y.PaginatedPlayerList({master: all_players, pagesize: 4});
+
+
+Y.PagedView = Y.Base.create('pagedView', Y.View, [], {
+  events: {
+    'button.next': {click: 'next'},
+    'button.previous': {click: 'previous'},
+    'select.sort': {change: 'sortBy'},
+    'select.filter': {change: 'filterBy'}
+  },
+
+  template: Y.Handlebars.compile(Y.one('#paged-template').getHTML()),
+
+  initializer: function () {
+    var self = this;
+    this.get('pagedList').on('load', function(e) {
+      self.render();
+    });
+  },
+
+  render: function () {
+    var page = {
+      navigation: this.get('pagedList').getNavigation(),
+      items: this.get('pagedList').toJSON(),
+    }
+    this.get('container').setHTML(this.template(page));
+    
+    return this;
+  },
+
+  next: function(e) {
+    this.get('pagedList').nextPage();
+  },
+
+  previous: function(e) {
+    this.get('pagedList').previousPage();
+  },
+
+  sortBy: function(e) {
+    this.get('pagedList').sortBy(e.target.get('value'));
+  },
+
+  filterBy: function(e) {
+    this.get('pagedList').filterBy(e.target.get('value'));
+  }
+}, {
+
+  ATTRS: {
+  }
+});
+
+var pagedView = new Y.PagedView({
+  container: Y.one('#wrapper'),
+  pagedList: list
+});
+
+list.load({}, function() {
+  pagedView.render();
+});
+
+
+});
+</script>
+</body>
+</html>
