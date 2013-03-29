@@ -41,7 +41,6 @@ ViewRegion.prototype = {
 
     var self = this,
         callback = options.callback,
-        container = this.parent.get('container'),
         prepend = options.prepend || false,
         transitioning = Y.App.CLASS_NAMES.transitioning,
         oldView,
@@ -64,7 +63,7 @@ ViewRegion.prototype = {
     regionContainer[prepend ? 'prepend' : 'append'](newView.get('container'));
     newView.addTarget(this.parent);
 
-    container.addClass(transitioning);
+    regionContainer.addClass(transitioning);
     transitions = new Y.Parallel({context: this});
     fxConfig    = {
         crossView: !!oldView && !!newView,
@@ -85,7 +84,7 @@ ViewRegion.prototype = {
     function complete() {
       oldView.remove();
       oldView.removeTarget(self.parent);
-      container.removeClass(transitioning);
+      regionContainer.removeClass(transitioning);
       callback && callback.call(self, newView);
     }
 
