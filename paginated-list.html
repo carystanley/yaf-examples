@@ -98,21 +98,7 @@ YUI({
     ]
   });
   
-  Y.PaginatedPlayerList = Y.Base.create('paginatedPlayerList', Y.PaginatedModelList, [Y.PaginatedModelSync], {
-    getFilter: function(type) {
-      if (type) {
-        return function(a) { return (a.get('type') == type); };
-      }
-      return null;
-    },
-
-    getSort: function(field) {
-      if (field) {
-        return function(a,b) { return (a.get(field) > b.get(field)) ? 1 : -1; };
-      }
-      return null;
-    }
-  });
+  Y.PaginatedPlayerList = Y.Base.create('paginatedPlayerList', Y.PaginatedModelList, [Y.PaginatedModelSync], {});
 
   var list = new Y.PaginatedPlayerList({master: all_players, pagesize: 4});
 
@@ -153,11 +139,21 @@ Y.PagedView = Y.Base.create('pagedView', Y.View, [], {
   },
 
   sortBy: function(e) {
-    this.get('pagedList').sortBy(e.target.getAttribute('data-value'));
+    var sort_field = e.target.getAttribute('data-value');
+    if (sort_field) {
+      this.get('pagedList').sortBy([{field: sort_field, dir: 'asc'}]);
+    } else {
+      this.get('pagedList').sortBy(null);
+    }
   },
 
   filterBy: function(e) {
-    this.get('pagedList').filterBy(e.target.getAttribute('data-value'));
+    var type_filter = e.target.getAttribute('data-value');
+    if (type_filter) {
+      this.get('pagedList').filterBy({type: type_filter});
+    } else {
+      this.get('pagedList').filterBy(null);
+    }
   }
 }, {
 

@@ -59,10 +59,39 @@ YUI.add('paginated-model-sync', function (Y, NAME) {
       },
 
       getFilter: function(filter) {
+        if (filter) {
+          return function(item) {
+            var field, value;
+            for (field in filter) {
+              value = filter[field];
+              if (item.get(field) !== value) {
+                return false;
+              }
+            }
+            return true;
+          };
+        }
         return null;
       },
 
       getSort: function(sort) {
+        if (sort) {
+          return function(a,b) {
+            var z, dimension, za, zb, zdir;
+            for (z = 0; z < sort.length; z++) {
+              dimension = sort[z];
+              za = a.get(dimension.field);
+              zb = b.get(dimension.field);
+              if (za == zb) continue;
+              if (dimension.dir === 'desc') {
+                return (za > zb) ? -1 : 1;
+              } else {
+                return (za > zb) ? 1 : -1;
+              }
+            }
+            return 0;
+          };
+        }
         return null;
       }
     };
