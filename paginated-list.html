@@ -121,8 +121,11 @@ Y.PagedView = Y.Base.create('pagedView', Y.View, [], {
   },
 
   render: function () {
+    var navigation = this.get('pagedList').getNavigation();
+    navigation.currentSort = JSON.stringify(navigation.currentSort);
+    navigation.currentFilter = JSON.stringify(navigation.currentFilter);
     var page = {
-      navigation: this.get('pagedList').getNavigation(),
+      navigation: navigation,
       items: this.get('pagedList').toJSON(),
     }
     this.get('container').setHTML(this.template(page));
